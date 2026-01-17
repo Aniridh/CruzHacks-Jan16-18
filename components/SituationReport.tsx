@@ -144,9 +144,13 @@ export default function SituationReport({ transcript, analysis, isLoading }: Sit
             <div className="p-3 bg-gray-50 rounded border border-gray-200">
               <div className="text-sm text-gray-700 font-medium mb-1">Hazards Detected</div>
               <div className="text-lg font-bold text-gray-900">{analysis.hazards.length}</div>
-              <div className="text-xs text-gray-600 mt-1">
-                Avg confidence: {Math.round(analysis.hazards.reduce((sum, h) => sum + h.confidence, 0) / analysis.hazards.length || 0)}%
-              </div>
+              {analysis.hazards.length > 0 ? (
+                <div className="text-xs text-gray-600 mt-1">
+                  Avg confidence: {Math.round(analysis.hazards.reduce((sum, h) => sum + h.confidence, 0) / analysis.hazards.length)}%
+                </div>
+              ) : (
+                <div className="text-xs text-gray-500 mt-1">No hazards detected</div>
+              )}
             </div>
           </div>
           {analysis.inferred && (

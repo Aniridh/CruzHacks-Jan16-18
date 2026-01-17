@@ -63,7 +63,7 @@ export default function SituationVisualizer({ visualizationData }: SituationVisu
       case 'low':
         return '#eab308'; // yellow
       default:
-        return '#gray';
+        return '#9ca3af'; // gray-400 (valid hex color)
     }
   };
 
