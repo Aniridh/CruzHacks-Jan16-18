@@ -1,0 +1,80 @@
+{
+  "id": "forest-terrain",
+  "environmentType": "forest",
+  "name": "Forest Hiking Trail Area",
+  "floors": 1,
+  "coordinateSystem": {
+    "width": 100,
+    "height": 100
+  },
+  "rooms": [
+    {
+      "id": "clearing-main",
+      "name": "Main Clearing",
+      "type": "clearing",
+      "coordinates": { "x": 40, "y": 40, "width": 30, "height": 30 }
+    },
+    {
+      "id": "camping-area",
+      "name": "Camping Area",
+      "type": "campsite",
+      "coordinates": { "x": 45, "y": 45, "width": 20, "height": 20 }
+    },
+    {
+      "id": "dense-woods-north",
+      "name": "Dense Woods North",
+      "type": "forest",
+      "coordinates": { "x": 30, "y": 0, "width": 40, "height": 35 }
+    },
+    {
+      "id": "dense-woods-south",
+      "name": "Dense Woods South",
+      "type": "forest",
+      "coordinates": { "x": 30, "y": 75, "width": 40, "height": 25 }
+    },
+    {
+      "id": "dense-woods-east",
+      "name": "Dense Woods East",
+      "type": "forest",
+      "coordinates": { "x": 75, "y": 30, "width": 25, "height": 50 }
+    },
+    {
+      "id": "dense-woods-west",
+      "name": "Dense Woods West",
+      "type": "forest",
+      "coordinates": { "x": 0, "y": 30, "width": 35, "height": 50 }
+    }
+  ],
+  "exits": [
+    {
+      "id": "trail-east",
+      "name": "East Trail to River",
+      "type": "door",
+      "coordinates": { "x": 100, "y": 50 }
+    },
+    {
+      "id": "trail-west",
+      "name": "West Trail Up Hill",
+      "type": "door",
+      "coordinates": { "x": 0, "y": 50 }
+    },
+    {
+      "id": "trail-north",
+      "name": "North Trail",
+      "type": "door",
+      "coordinates": { "x": 50, "y": 0 }
+    },
+    {
+      "id": "trail-south",
+      "name": "South Trail",
+      "type": "door",
+      "coordinates": { "x": 50, "y": 100 }
+    },
+    {
+      "id": "river-access",
+      "name": "River Access Point",
+      "type": "door",
+      "coordinates": { "x": 85, "y": 70 }
+    }
+  ]
+}

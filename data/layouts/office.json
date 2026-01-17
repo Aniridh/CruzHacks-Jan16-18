@@ -1,0 +1,92 @@
+{
+  "id": "office-building",
+  "environmentType": "office",
+  "name": "Office Building - Open Floor Plan",
+  "floors": 3,
+  "coordinateSystem": {
+    "width": 100,
+    "height": 100
+  },
+  "rooms": [
+    {
+      "id": "break-room",
+      "name": "Break Room",
+      "type": "breakroom",
+      "coordinates": { "x": 0, "y": 0, "width": 25, "height": 25 }
+    },
+    {
+      "id": "conference-1",
+      "name": "Conference Room A",
+      "type": "conference",
+      "coordinates": { "x": 30, "y": 0, "width": 20, "height": 20 }
+    },
+    {
+      "id": "conference-2",
+      "name": "Conference Room B",
+      "type": "conference",
+      "coordinates": { "x": 55, "y": 0, "width": 20, "height": 20 }
+    },
+    {
+      "id": "cubicles-north",
+      "name": "Cubicle Section North",
+      "type": "workspace",
+      "coordinates": { "x": 0, "y": 30, "width": 45, "height": 35 }
+    },
+    {
+      "id": "cubicles-south",
+      "name": "Cubicle Section South",
+      "type": "workspace",
+      "coordinates": { "x": 50, "y": 30, "width": 45, "height": 35 }
+    },
+    {
+      "id": "manager-offices",
+      "name": "Manager Offices",
+      "type": "office",
+      "coordinates": { "x": 0, "y": 70, "width": 30, "height": 30 }
+    },
+    {
+      "id": "it-room",
+      "name": "IT Server Room",
+      "type": "server",
+      "coordinates": { "x": 35, "y": 70, "width": 15, "height": 15 }
+    },
+    {
+      "id": "reception",
+      "name": "Reception Area",
+      "type": "reception",
+      "coordinates": { "x": 55, "y": 70, "width": 40, "height": 30 }
+    }
+  ],
+  "exits": [
+    {
+      "id": "main-entrance",
+      "name": "Main Entrance",
+      "type": "door",
+      "coordinates": { "x": 65, "y": 0 }
+    },
+    {
+      "id": "elevator-1",
+      "name": "Elevator Bank",
+      "type": "elevator",
+      "coordinates": { "x": 47, "y": 25 }
+    },
+    {
+      "id": "stairwell-west",
+      "name": "West Stairwell",
+      "type": "stairwell",
+      "coordinates": { "x": 5, "y": 50 }
+    },
+    {
+      "id": "stairwell-east",
+      "name": "East Stairwell",
+      "type": "stairwell",
+      "coordinates": { "x": 95, "y": 50 }
+    },
+    {
+      "id": "fire-exit",
+      "name": "Fire Exit",
+      "type": "door",
+      "coordinates": { "x": 50, "y": 100 }
+    }
+  ]
+}
