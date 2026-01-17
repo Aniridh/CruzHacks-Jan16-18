@@ -55,30 +55,15 @@ export default function SituationVisualizer({ visualizationData }: SituationVisu
   const scale = 6; // 100 * 6 = 600px
 
   const getRiskColor = (severity: Severity): string => {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/9bc112d7-a119-445f-a014-5e4f2664b6d3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'[Front-End]/components/SituationVisualizer.tsx:57',message:'getRiskColor called',data:{severity:severity,severityType:typeof severity},timestamp:Date.now(),sessionId:'debug-session',runId:'pre-fix',hypothesisId:'A'})}).catch(()=>{});
-    // #endregion
     switch (severity) {
       case 'high':
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/9bc112d7-a119-445f-a014-5e4f2664b6d3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'[Front-End]/components/SituationVisualizer.tsx:60',message:'getRiskColor returning high color',data:{returnValue:'#ef4444'},timestamp:Date.now(),sessionId:'debug-session',runId:'pre-fix',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
         return '#ef4444'; // red
       case 'medium':
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/9bc112d7-a119-445f-a014-5e4f2664b6d3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'[Front-End]/components/SituationVisualizer.tsx:63',message:'getRiskColor returning medium color',data:{returnValue:'#f97316'},timestamp:Date.now(),sessionId:'debug-session',runId:'pre-fix',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
         return '#f97316'; // orange
       case 'low':
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/9bc112d7-a119-445f-a014-5e4f2664b6d3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'[Front-End]/components/SituationVisualizer.tsx:66',message:'getRiskColor returning low color',data:{returnValue:'#eab308'},timestamp:Date.now(),sessionId:'debug-session',runId:'pre-fix',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
         return '#eab308'; // yellow
       default:
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/9bc112d7-a119-445f-a014-5e4f2664b6d3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'[Front-End]/components/SituationVisualizer.tsx:69',message:'getRiskColor DEFAULT CASE HIT - INVALID COLOR',data:{severity:severity,returnValue:'#gray',isValidColor:false},timestamp:Date.now(),sessionId:'debug-session',runId:'pre-fix',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
-        return '#gray';
+        return '#9ca3af'; // gray-400 (valid hex color)
     }
   };
 
@@ -134,9 +119,6 @@ export default function SituationVisualizer({ visualizationData }: SituationVisu
           {/* Render risk zones (heat map overlay) */}
           {riskZones.map((zone) => {
             const color = getRiskColor(zone.severity);
-            // #region agent log
-            fetch('http://127.0.0.1:7242/ingest/9bc112d7-a119-445f-a014-5e4f2664b6d3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'[Front-End]/components/SituationVisualizer.tsx:123',message:'Risk zone rendering',data:{zoneId:zone.id,severity:zone.severity,colorValue:color,isValidHexColor:/^#[0-9A-Fa-f]{6}$/.test(color)||/^#[0-9A-Fa-f]{3}$/.test(color)},timestamp:Date.now(),sessionId:'debug-session',runId:'pre-fix',hypothesisId:'B'})}).catch(()=>{});
-            // #endregion
             const opacity = getRiskOpacity(zone.severity);
             return (
               <rect
