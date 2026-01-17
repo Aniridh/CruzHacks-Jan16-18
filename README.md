@@ -106,9 +106,41 @@ npm run dev
     └── reasoningGenerator.ts   # Decision reasoning generator
 ```
 
+## Git Workflow & SSH
+
+The repository is configured to use SSH for git operations. Helper scripts are provided for easy commits:
+
+### Quick Commit Commands
+
+```bash
+# Commit changes with a message
+./commit.sh "Your commit message here"
+
+# Push committed changes to remote
+./push.sh
+
+# Commit and push in one command
+./commit-and-push.sh "Your commit message here"
+```
+
+### Examples
+
+```bash
+# Commit all changes
+./commit.sh "Add new visualization component"
+
+# Commit and push together
+./commit-and-push.sh "Update API endpoint with confidence scores"
+
+# Just push if you've already committed
+./push.sh
+```
+
+**Note:** The remote is configured to use SSH (`git@github.com`), so make sure your SSH keys are set up with GitHub.
+
 ## Deploy on Vercel
 
-1. Push your code to GitHub
+1. Push your code to GitHub (use `./push.sh` or `git push`)
 2. Import project in [Vercel](https://vercel.com)
 3. Add environment variable: `OPENAI_API_KEY`
 4. Deploy!
