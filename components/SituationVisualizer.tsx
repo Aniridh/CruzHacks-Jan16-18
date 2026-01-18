@@ -1,7 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { VisualizationData, Severity } from '@/types';
+import FireSpreadOverlay from './FireSpreadOverlay';
+import FireSpreadControls from './FireSpreadControls';
 
 interface SituationVisualizerProps {
   visualizationData: VisualizationData | null;
@@ -10,6 +12,18 @@ interface SituationVisualizerProps {
 export default function SituationVisualizer({ visualizationData }: SituationVisualizerProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const firePulseRef = useRef<SVGCircleElement>(null);
+  
+  // Fire spread animation state
+  const [isFireSpreadRunning, setIsFireSpreadRunning] = useState(false);
+  const [fireSpreadSpeed, setFireSpreadSpeed] = useState(1);
+  const [fireSpreadIntensity, setFireSpreadIntensity] = useState(1);
+  const [fireSpreadKey, setFireSpreadKey] = useState(0);
+
+  // Reset fire spread when visualization data changes
+  useEffect(() => {
+    setIsFireSpreadRunning(false);
+    setFireSpreadKey((prev) => prev + 1);
+  }, [visualizationData]);
 
   useEffect(() => {
     // Simple pulsing animation for fire origin
@@ -80,9 +94,28 @@ export default function SituationVisualizer({ visualizationData }: SituationVisu
     }
   };
 
+  const handleResetFireSpread = () => {
+    setIsFireSpreadRunning(false);
+    setFireSpreadKey((prev) => prev + 1);
+  };
+
   return (
     <div className="w-full bg-white rounded-lg border-2 border-gray-300 shadow-lg p-4">
       <h2 className="text-xl font-bold mb-4 text-gray-800">Situation Visualization</h2>
+      
+      {/* Fire Spread Controls */}
+      <div className="mb-4">
+        <FireSpreadControls
+          isRunning={isFireSpreadRunning}
+          onToggleRunning={() => setIsFireSpreadRunning(!isFireSpreadRunning)}
+          onReset={handleResetFireSpread}
+          speed={fireSpreadSpeed}
+          onSpeedChange={setFireSpreadSpeed}
+          intensity={fireSpreadIntensity}
+          onIntensityChange={setFireSpreadIntensity}
+        />
+      </div>
+
       <div className="relative">
         <svg
           ref={svgRef}
@@ -245,10 +278,28 @@ export default function SituationVisualizer({ visualizationData }: SituationVisu
               Fire Origin
             </text>
           </g>
-          </svg>
+        </svg>
 
-        {/* Legend */}
-        <div className="mt-4 p-4 bg-gray-50 rounded border border-gray-200">
+        {/* Fire Spread Overlay */}
+        <FireSpreadOverlay
+          key={fireSpreadKey}
+          layout={layout}
+          origin={{ x: fireX, y: fireY }}
+          riskZones={riskZones}
+          params={{
+            spreadProb: 0.3 * fireSpreadIntensity,
+            decayMs: 2000,
+            particleRate: 5 * fireSpreadIntensity,
+            maxParticles: 500,
+            seed: 42,
+          }}
+          isRunning={isFireSpreadRunning}
+          speed={fireSpreadSpeed}
+        />
+      </div>
+
+      {/* Legend */}
+      <div className="mt-4 p-4 bg-gray-50 rounded border border-gray-200">
           <h3 className="font-semibold text-sm mb-2 text-gray-700">Legend</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
             <div className="flex items-center">
@@ -283,7 +334,6 @@ export default function SituationVisualizer({ visualizationData }: SituationVisu
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 }
