@@ -160,15 +160,16 @@ export default function VoiceRecorder({ onTranscriptComplete }: VoiceRecorderPro
         console.log('Using inline assistant configuration (no assistant ID provided)');
         
         // Inline assistant configuration
+        // Note: Type assertion needed due to strict Vapi SDK types
         const assistantConfig = {
           transcriber: {
             provider: 'deepgram' as const,
-            model: 'nova-2',
-            language: 'en-US',
+            model: 'nova-2' as const,
+            language: 'en-US' as const,
           },
           model: {
             provider: 'openai' as const,
-            model: 'gpt-3.5-turbo',
+            model: 'gpt-3.5-turbo' as const,
             messages: [
               {
                 role: 'system' as const,
@@ -178,13 +179,14 @@ export default function VoiceRecorder({ onTranscriptComplete }: VoiceRecorderPro
           },
           voice: {
             provider: 'playht' as const,
-            voiceId: 'jennifer',
+            voiceId: 'jennifer' as const,
           },
-        };
+        } as const;
         
         console.log('Assistant config:', JSON.stringify(assistantConfig, null, 2));
         
-        await vapi.start(assistantConfig);
+        // Type assertion to satisfy strict Vapi SDK types
+        await vapi.start(assistantConfig as any);
       }
       
       console.log('✅ Vapi call started successfully');
