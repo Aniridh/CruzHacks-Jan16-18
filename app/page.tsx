@@ -51,11 +51,19 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
       <header className="bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-3xl font-bold mb-2">IGNIS</h1>
-          <p className="text-red-100 text-lg">
-            Emergency Insight System — Transforming emergency calls into clear spatial insight
-          </p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">IGNIS</h1>
+            <p className="text-red-100 text-lg">
+              Emergency Insight System — Transforming emergency calls into clear spatial insight
+            </p>
+          </div>
+          <a
+            href="/landing"
+            className="hidden md:block px-4 py-2 bg-red-800 hover:bg-red-900 rounded border border-red-600 text-sm font-medium transition-colors"
+          >
+            Landing Page
+          </a>
         </div>
       </header>
 

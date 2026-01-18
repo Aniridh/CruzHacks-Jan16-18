@@ -77,6 +77,16 @@ npm run dev
 
 ## Usage
 
+### Landing Page
+
+Visit `/landing` for the tactical-themed landing page featuring:
+- Military-style HUD interface
+- Animated wireframe buildings
+- Tactical grid and targeting reticle
+- Quick access to dashboard and GitHub
+
+### Dashboard
+
 1. **Select a Demo Scenario**: Click on any scenario card to load a pre-recorded emergency call
 2. **View Analysis**: The system automatically analyzes the transcript using GPT-4
 3. **Explore Visualization**: See the spatial visualization with fire zones, safe paths, and strike nodes
