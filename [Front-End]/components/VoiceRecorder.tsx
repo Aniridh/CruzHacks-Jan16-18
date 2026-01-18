@@ -2,6 +2,7 @@
 
 import { useState, useLayoutEffect } from 'react';
 import Vapi from '@vapi-ai/web';
+import { getVapiPublicKey, getVapiAssistantId, getMissingConfigMessage } from '@/utils/envValidation';
 
 interface VoiceRecorderProps {
   onTranscriptComplete: (transcript: string) => void;
@@ -28,34 +29,24 @@ export default function VoiceRecorder({ onTranscriptComplete }: VoiceRecorderPro
 
   // Use useLayoutEffect for synchronous initialization error handling
   useLayoutEffect(() => {
-    // Initialize Vapi
-    const publicKey = process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY;
+    // Get and validate Vapi public key
+    const publicKey = getVapiPublicKey();
     
     if (!publicKey) {
-      setError('Vapi API key not configured. Please add NEXT_PUBLIC_VAPI_PUBLIC_KEY to .env.local');
+      setError(getMissingConfigMessage('vapi'));
       return;
     }
 
-    // Validate key format (UUID or pk_ format)
-    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(publicKey);
-    const isPkFormat = publicKey.startsWith('pk_');
-    
-    if (!isUUID && !isPkFormat) {
-      console.warn('⚠️ Vapi public key format not recognized. Key:', publicKey.substring(0, 10) + '...');
-      setError('Invalid Vapi API key format. Check https://dashboard.vapi.ai/ → Settings → Public Key');
-      return;
-    }
-
-    console.log('✅ Initializing Vapi with key:', publicKey.substring(0, 15) + '...');
-    console.log('Key format:', isUUID ? 'UUID' : 'pk_ format');
+    // Production-safe logging (no key exposure)
+    console.log('[Vapi] Initializing voice recorder...');
 
     let vapiInstance: Vapi;
     try {
       vapiInstance = new Vapi(publicKey);
       setVapi(vapiInstance);
-      console.log('✅ Vapi initialized successfully');
+      console.log('[Vapi] ✅ Initialized successfully');
     } catch (err) {
-      console.error('❌ Failed to initialize Vapi:', err);
+      console.error('[Vapi] ❌ Initialization failed:', err);
       setError('Failed to initialize Vapi: ' + (err instanceof Error ? err.message : 'Unknown error'));
       return;
     }
@@ -148,16 +139,16 @@ export default function VoiceRecorder({ onTranscriptComplete }: VoiceRecorderPro
         throw new Error('Microphone access denied. Please allow microphone access in your browser settings.');
       }
       
-      console.log('🚀 Calling vapi.start()...');
+      console.log('[Vapi] Starting voice call...');
       
       // Check if assistant ID is provided (preferred method)
-      const assistantId = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID;
+      const assistantId = getVapiAssistantId();
       
       if (assistantId) {
-        console.log('Using assistant ID:', assistantId.substring(0, 10) + '...');
+        console.log('[Vapi] Using pre-configured assistant');
         await vapi.start(assistantId);
       } else {
-        console.log('Using inline assistant configuration (no assistant ID provided)');
+        console.log('[Vapi] Using inline assistant configuration');
         
         // Inline assistant configuration
         // Note: Type assertion needed due to strict Vapi SDK types
@@ -183,13 +174,11 @@ export default function VoiceRecorder({ onTranscriptComplete }: VoiceRecorderPro
           },
         } as const;
         
-        console.log('Assistant config:', JSON.stringify(assistantConfig, null, 2));
-        
         // Type assertion to satisfy strict Vapi SDK types
         await vapi.start(assistantConfig as any);
       }
       
-      console.log('✅ Vapi call started successfully');
+      console.log('[Vapi] ✅ Voice call started successfully');
     } catch (err) {
       console.error('❌ Error starting recording:', err);
       console.error('Error type:', typeof err);

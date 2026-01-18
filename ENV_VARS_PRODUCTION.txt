@@ -1,0 +1,62 @@
+🔐 EXACT ENVIRONMENT VARIABLES FOR VERCEL PRODUCTION
+================================================================
+
+Go to: Vercel Dashboard → Your Project → Settings → Environment Variables
+
+ADD THESE:
+
+1. OPENAI_API_KEY
+   Value: sk-your-actual-openai-key
+   Environment: Production, Preview, Development
+
+2. NEXT_PUBLIC_VAPI_PUBLIC_KEY
+   Value: 57ac3c37-a8aa-429b-8d94-afbfff2cab86
+   Environment: Production, Preview, Development
+
+OPTIONAL (add only if you have them):
+
+3. NEXT_PUBLIC_VAPI_ASSISTANT_ID
+   Value: (your assistant ID)
+   Environment: Production, Preview, Development
+
+4. VAPI_WEBHOOK_SECRET
+   Value: (your webhook secret)
+   Environment: Production, Preview, Development
+
+5. MONGODB_URI
+   Value: (your mongodb connection string)
+   Environment: Production, Preview, Development
+
+================================================================
+SECURITY RULES:
+================================================================
+
+✅ SAFE FOR BROWSER (use NEXT_PUBLIC_ prefix):
+   - NEXT_PUBLIC_VAPI_PUBLIC_KEY
+   - NEXT_PUBLIC_VAPI_ASSISTANT_ID
+
+❌ SERVER ONLY (NO NEXT_PUBLIC_ prefix):
+   - OPENAI_API_KEY
+   - VAPI_WEBHOOK_SECRET
+   - MONGODB_URI
+
+================================================================
+WHAT'S REQUIRED?
+================================================================
+
+NOTHING! App works without ANY env vars:
+- Demo mode works offline ✅
+- Rule-based analysis fallback ✅
+- No database needed ✅
+
+For full features:
+1. Add OPENAI_API_KEY → Better AI analysis
+2. Add NEXT_PUBLIC_VAPI_PUBLIC_KEY → Voice input
+
+================================================================
+DEPLOY COMMAND:
+================================================================
+
+vercel --prod
+
+================================================================
