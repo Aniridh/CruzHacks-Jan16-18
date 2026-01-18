@@ -301,37 +301,37 @@ export default function SituationVisualizer({ visualizationData }: SituationVisu
 
       {/* Legend */}
       <div className="mt-4 p-4 bg-gray-50 rounded border border-gray-200">
-          <h3 className="font-semibold text-sm mb-2 text-gray-700">Legend</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+          <h3 className="font-semibold text-sm mb-2 text-gray-900">Legend</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs text-gray-900">
             <div className="flex items-center">
               <div className="w-4 h-4 bg-red-500 mr-2 rounded"></div>
-              <span>High Risk Zone</span>
+              <span className="text-gray-900">High Risk Zone</span>
             </div>
             <div className="flex items-center">
               <div className="w-4 h-4 bg-orange-500 mr-2 rounded"></div>
-              <span>Medium Risk</span>
+              <span className="text-gray-900">Medium Risk</span>
             </div>
             <div className="flex items-center">
               <div className="w-4 h-4 bg-yellow-500 mr-2 rounded"></div>
-              <span>Low Risk</span>
+              <span className="text-gray-900">Low Risk</span>
             </div>
             <div className="flex items-center">
               <div className="w-4 h-4 border-2 border-green-600 mr-2 rounded-full"></div>
-              <span>Exit/Safe Zone</span>
+              <span className="text-gray-900">Exit/Safe Zone</span>
             </div>
             <div className="flex items-center">
               <svg width="16" height="4" className="mr-2">
                 <line x1="0" y1="2" x2="16" y2="2" stroke="#10b981" strokeDasharray="2,2" strokeWidth="2" />
               </svg>
-              <span>Safe Path</span>
+              <span className="text-gray-900">Safe Path</span>
             </div>
             <div className="flex items-center">
               <div className="w-4 h-4 bg-red-600 rounded-full mr-2"></div>
-              <span>Strike Node</span>
+              <span className="text-gray-900">Strike Node</span>
             </div>
             <div className="flex items-center">
               <div className="w-4 h-4 bg-red-600 rounded-full mr-2 animate-pulse"></div>
-              <span>Fire Origin</span>
+              <span className="text-gray-900">Fire Origin</span>
             </div>
           </div>
         </div>
