@@ -39,9 +39,6 @@ export default function SituationReport({ transcript, analysis, isLoading }: Sit
         // Calculate risk zones
         const riskZones = calculateRiskZones(layout, analysis.fireOrigin);
 
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/9bc112d7-a119-445f-a014-5e4f2664b6d3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'components/SituationReport.tsx:40',message:'Before safe path calculation',data:{hasFireOrigin:!!analysis.fireOrigin,hasFireOriginArea:!!analysis.fireOrigin?.area,fireOriginArea:analysis.fireOrigin?.area,fireOriginAreaType:typeof analysis.fireOrigin?.area},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'D'})}).catch(()=>{});
-        // #endregion
         // Calculate safe paths (starting from a room if specified)
         // Guard against missing area field (matches pattern in SituationVisualizer.tsx)
         const startRoomId = analysis.fireOrigin.area
@@ -49,9 +46,6 @@ export default function SituationReport({ transcript, analysis, isLoading }: Sit
               r.name.toLowerCase().includes(analysis.fireOrigin.area.toLowerCase())
             )?.id
           : undefined;
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/9bc112d7-a119-445f-a014-5e4f2664b6d3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'components/SituationReport.tsx:48',message:'After safe path calculation',data:{startRoomId:startRoomId,areaUsed:analysis.fireOrigin?.area,areaGuardPassed:!!analysis.fireOrigin?.area},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'D'})}).catch(()=>{});
-        // #endregion
         const safePaths = calculateSafePaths(layout, analysis.fireOrigin, riskZones, startRoomId);
 
         // Identify strike nodes

@@ -20,17 +20,11 @@ export default function SituationVisualizer({ visualizationData }: SituationVisu
   const [fireSpreadKey, setFireSpreadKey] = useState(0);
 
   // Reset fire spread when visualization data changes
+  // Combined into single effect to ensure atomic state updates and prevent race conditions
   useEffect(() => {
-    // Reset animation state when visualization changes using separate state updates
-    // Set isRunning to false first, then increment key
     if (visualizationData) {
+      // Reset both state values atomically in the same effect
       setIsFireSpreadRunning(false);
-    }
-  }, [visualizationData]);
-
-  useEffect(() => {
-    // Increment key when visualization changes to force remount
-    if (visualizationData) {
       setFireSpreadKey((prev) => prev + 1);
     }
   }, [visualizationData]);

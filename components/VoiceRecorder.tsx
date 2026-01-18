@@ -36,14 +36,18 @@ export default function VoiceRecorder({ onTranscriptComplete }: VoiceRecorderPro
       return;
     }
 
-    // Validate key format (should start with pk_)
-    if (!publicKey.startsWith('pk_')) {
-      console.warn('⚠️ Vapi public key should start with "pk_". Current key:', publicKey.substring(0, 10) + '...');
-      setError('Invalid Vapi API key format. Public keys should start with "pk_". Check https://dashboard.vapi.ai/ → Settings → Public Key');
+    // Validate key format (UUID or pk_ format)
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(publicKey);
+    const isPkFormat = publicKey.startsWith('pk_');
+    
+    if (!isUUID && !isPkFormat) {
+      console.warn('⚠️ Vapi public key format not recognized. Key:', publicKey.substring(0, 10) + '...');
+      setError('Invalid Vapi API key format. Check https://dashboard.vapi.ai/ → Settings → Public Key');
       return;
     }
 
-    console.log('✅ Initializing Vapi with key:', publicKey.substring(0, 10) + '...');
+    console.log('✅ Initializing Vapi with key:', publicKey.substring(0, 15) + '...');
+    console.log('Key format:', isUUID ? 'UUID' : 'pk_ format');
 
     let vapiInstance: Vapi;
     try {
@@ -131,44 +135,81 @@ export default function VoiceRecorder({ onTranscriptComplete }: VoiceRecorderPro
       setError(null);
       
       console.log('📞 Starting Vapi call...');
+      console.log('Vapi instance:', vapi);
       
-      // Start a call with Vapi assistant
-      await vapi.start({
-        transcriber: {
-          provider: 'deepgram',
-          model: 'nova-2',
-          language: 'en-US',
-        },
-        model: {
-          provider: 'openai',
-          model: 'gpt-3.5-turbo',
-          messages: [
-            {
-              role: 'system',
-              content: 'You are an emergency call responder. Listen carefully to the caller describing a fire emergency. Ask clarifying questions about the location, fire origin, visible hazards, and any blocked exits. Keep responses brief and focused on gathering critical information.',
-            },
-          ],
-        },
-        voice: {
-          provider: 'playht',
-          voiceId: 'jennifer',
-        },
-      });
+      // Check microphone permission first
+      console.log('🎙️ Checking microphone access...');
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        console.log('✅ Microphone access granted');
+        stream.getTracks().forEach(track => track.stop()); // Stop test stream
+      } catch (micError) {
+        console.error('❌ Microphone access denied:', micError);
+        throw new Error('Microphone access denied. Please allow microphone access in your browser settings.');
+      }
+      
+      console.log('🚀 Calling vapi.start()...');
+      
+      // Check if assistant ID is provided (preferred method)
+      const assistantId = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID;
+      
+      if (assistantId) {
+        console.log('Using assistant ID:', assistantId.substring(0, 10) + '...');
+        await vapi.start(assistantId);
+      } else {
+        console.log('Using inline assistant configuration (no assistant ID provided)');
+        
+        // Inline assistant configuration
+        const assistantConfig = {
+          transcriber: {
+            provider: 'deepgram' as const,
+            model: 'nova-2',
+            language: 'en-US',
+          },
+          model: {
+            provider: 'openai' as const,
+            model: 'gpt-3.5-turbo',
+            messages: [
+              {
+                role: 'system' as const,
+                content: 'You are an emergency call responder. Listen carefully to the caller describing a fire emergency. Ask clarifying questions about the location, fire origin, visible hazards, and any blocked exits. Keep responses brief and focused on gathering critical information.',
+              },
+            ],
+          },
+          voice: {
+            provider: 'playht' as const,
+            voiceId: 'jennifer',
+          },
+        };
+        
+        console.log('Assistant config:', JSON.stringify(assistantConfig, null, 2));
+        
+        await vapi.start(assistantConfig);
+      }
       
       console.log('✅ Vapi call started successfully');
     } catch (err) {
       console.error('❌ Error starting recording:', err);
       console.error('Error type:', typeof err);
+      console.error('Error constructor:', err?.constructor?.name);
       console.error('Error details:', JSON.stringify(err, null, 2));
+      console.error('Error stack:', err instanceof Error ? err.stack : 'No stack');
       
       let errorMessage = 'Failed to start recording';
       if (err instanceof Error) {
         errorMessage = err.message;
+        console.error('Error message:', err.message);
       } else if (typeof err === 'string') {
         errorMessage = err;
+      } else if (err && typeof err === 'object') {
+        // Try to extract any useful info
+        const errObj = err as Record<string, unknown>;
+        if (errObj.message) errorMessage = String(errObj.message);
+        else if (errObj.error) errorMessage = String(errObj.error);
+        else if (errObj.statusText) errorMessage = String(errObj.statusText);
       }
       
-      setError(errorMessage + '. Check browser console for details.');
+      setError(errorMessage + '. Check browser console for full details.');
     }
   };
 
