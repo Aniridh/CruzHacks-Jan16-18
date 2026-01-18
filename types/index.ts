@@ -2,7 +2,7 @@
 
 export type EnvironmentType = 'apartment' | 'office' | 'school' | 'forest' | 'warehouse';
 
-export type UrgencyLevel = 'critical' | 'high' | 'medium';
+export type UrgencyLevel = 'critical' | 'high' | 'medium' | 'low';
 
 export type Severity = 'high' | 'medium' | 'low';
 
@@ -38,6 +38,7 @@ export interface SituationAnalysis {
   landmarks: Landmark[];
   hazards: Hazard[];
   urgency: UrgencyLevel;
+  spreadProbability?: number; // 0-100 (likelihood of rapid fire spread)
   inferred: boolean; // indicates if data was inferred vs. explicitly stated
 }
 

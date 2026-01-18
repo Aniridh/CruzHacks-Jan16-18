@@ -1,6 +1,6 @@
 // Visualization logic: risk zones, pathfinding, strike nodes
 
-import { LayoutTemplate, FireOrigin, RiskZone, SafePath, StrikeNode, Severity, Exit } from '@/types';
+import { LayoutTemplate, FireOrigin, RiskZone, SafePath, StrikeNode, Severity } from '@/types';
 
 /**
  * Calculate risk zones based on fire origin and layout

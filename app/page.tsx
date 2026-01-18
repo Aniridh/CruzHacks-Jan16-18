@@ -2,20 +2,20 @@
 
 import { useState } from 'react';
 import DemoMode from '@/components/DemoMode';
+import VoiceRecorder from '@/components/VoiceRecorder';
 import SituationReport from '@/components/SituationReport';
 import { DemoScenario } from '@/data/demoScenarios';
 import { SituationAnalysis } from '@/types';
 
 export default function Home() {
-  const [selectedScenario, setSelectedScenario] = useState<DemoScenario | null>(null);
   const [transcript, setTranscript] = useState<string>('');
   const [analysis, setAnalysis] = useState<SituationAnalysis | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [inputMode, setInputMode] = useState<'demo' | 'voice'>('voice'); // Default to voice mode
 
-  const handleScenarioSelect = async (scenario: DemoScenario) => {
-    setSelectedScenario(scenario);
-    setTranscript(scenario.transcript.text);
+  const analyzeTranscript = async (transcriptText: string) => {
+    setTranscript(transcriptText);
     setAnalysis(null);
     setError(null);
     setIsLoading(true);
@@ -28,7 +28,7 @@ export default function Home() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          transcript: scenario.transcript.text,
+          transcript: transcriptText,
         }),
       });
 
@@ -45,6 +45,14 @@ export default function Home() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleScenarioSelect = async (scenario: DemoScenario) => {
+    await analyzeTranscript(scenario.transcript.text);
+  };
+
+  const handleVoiceTranscript = async (transcriptText: string) => {
+    await analyzeTranscript(transcriptText);
   };
 
   return (
@@ -77,8 +85,41 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        {/* Mode Toggle */}
+        <div className="mb-8 flex justify-center gap-4">
+          <button
+            onClick={() => setInputMode('voice')}
+            className={`px-8 py-4 rounded-lg font-semibold transition-all duration-300 ${
+              inputMode === 'voice'
+                ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg shadow-orange-500/50'
+                : 'bg-slate-800/50 text-gray-400 hover:text-gray-200 border border-slate-700'
+            }`}
+          >
+            🎤 Live Voice Input
+          </button>
+          <button
+            onClick={() => setInputMode('demo')}
+            className={`px-8 py-4 rounded-lg font-semibold transition-all duration-300 ${
+              inputMode === 'demo'
+                ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg shadow-orange-500/50'
+                : 'bg-slate-800/50 text-gray-400 hover:text-gray-200 border border-slate-700'
+            }`}
+          >
+            📋 Demo Scenarios
+          </button>
+        </div>
+
+        {/* Voice Recorder */}
+        {inputMode === 'voice' && (
+          <div className="mb-8 relative">
+            <VoiceRecorder onTranscriptComplete={handleVoiceTranscript} />
+          </div>
+        )}
+
         {/* Demo Mode */}
-        <DemoMode onScenarioSelect={handleScenarioSelect} isLoading={isLoading} />
+        {inputMode === 'demo' && (
+          <DemoMode onScenarioSelect={handleScenarioSelect} isLoading={isLoading} />
+        )}
 
         {/* Error Display */}
         {error && (
@@ -97,12 +138,12 @@ export default function Home() {
         )}
 
         {/* Situation Report */}
-        {selectedScenario && (
+        {transcript && (
           <SituationReport transcript={transcript} analysis={analysis} isLoading={isLoading} />
         )}
 
         {/* Welcome Message */}
-        {!selectedScenario && !isLoading && (
+        {!transcript && !isLoading && (
           <div className="mt-12 text-center">
             <div className="relative inline-block p-10 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl border-2 border-orange-500/30 shadow-2xl max-w-2xl backdrop-blur-sm">
               {/* Corner accents */}
@@ -121,7 +162,10 @@ export default function Home() {
                 Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">IGNIS</span>
               </h2>
               <p className="text-slate-300 mb-6 leading-relaxed">
-                Select a demo scenario above to see how IGNIS transforms emergency calls into structured spatial insights.
+                {inputMode === 'voice' 
+                  ? 'Click "Start Voice Call" above to begin recording an emergency call simulation.'
+                  : 'Select a demo scenario above to see how IGNIS transforms emergency calls into structured spatial insights.'
+                }
               </p>
               <div className="mt-6 p-6 bg-slate-950/50 rounded-lg border border-orange-500/20 backdrop-blur-sm">
                 <p className="text-sm text-slate-400 leading-relaxed">

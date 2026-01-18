@@ -1,10 +1,10 @@
 // Generate decision reasoning from visualization data
 
-import { VisualizationData, DecisionReasoning, Severity } from '@/types';
+import { VisualizationData, DecisionReasoning, SituationAnalysis, Hazard } from '@/types';
 
 export function generateDecisionReasoning(
   visualizationData: VisualizationData,
-  situationAnalysis: any // SituationAnalysis type
+  situationAnalysis: SituationAnalysis
 ): DecisionReasoning {
   const { riskZones, safePaths, strikeNodes } = visualizationData;
 
@@ -28,7 +28,7 @@ export function generateDecisionReasoning(
   });
 
   // Path reasoning
-  const pathReasoning = safePaths.map((path, index) => {
+  const pathReasoning = safePaths.map((path) => {
     const isRecommended = path.priority <= 2; // Top 2 paths are recommended
     let explanation = `Path to ${path.description}. `;
     if (isRecommended) {
@@ -91,7 +91,7 @@ export function generateDecisionReasoning(
     });
   }
 
-  situationAnalysis.hazards.forEach((hazard: any) => {
+  situationAnalysis.hazards.forEach((hazard: Hazard) => {
     if (hazard.confidence < 80) {
       uncertaintyMarkers.push({
         field: `Hazard: ${hazard.type}`,

@@ -16,7 +16,7 @@ export interface IIncident extends Document {
   error?: {
     code?: string;
     message?: string;
-    raw?: any;
+    raw?: unknown;
   };
 }
 

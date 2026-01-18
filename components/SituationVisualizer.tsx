@@ -21,8 +21,18 @@ export default function SituationVisualizer({ visualizationData }: SituationVisu
 
   // Reset fire spread when visualization data changes
   useEffect(() => {
-    setIsFireSpreadRunning(false);
-    setFireSpreadKey((prev) => prev + 1);
+    // Reset animation state when visualization changes using separate state updates
+    // Set isRunning to false first, then increment key
+    if (visualizationData) {
+      setIsFireSpreadRunning(false);
+    }
+  }, [visualizationData]);
+
+  useEffect(() => {
+    // Increment key when visualization changes to force remount
+    if (visualizationData) {
+      setFireSpreadKey((prev) => prev + 1);
+    }
   }, [visualizationData]);
 
   useEffect(() => {
@@ -64,9 +74,6 @@ export default function SituationVisualizer({ visualizationData }: SituationVisu
       fireY = fireRoom.coordinates.y + fireRoom.coordinates.height / 2;
     }
   }
-
-  // Scale factor for SVG (100x100 coordinate system to viewBox)
-  const scale = 6; // 100 * 6 = 600px
 
   const getRiskColor = (severity: Severity): string => {
     switch (severity) {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { TacticalGrid } from '@/components/landing/TacticalGrid';
 import { WireframeBuilding } from '@/components/landing/WireframeBuilding';
@@ -10,12 +10,7 @@ import { Shield, Radio, Crosshair } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function LandingPage() {
-  const [mounted, setMounted] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <main className="relative w-full h-screen bg-[#020617] text-slate-200 overflow-hidden font-sans selection:bg-orange-500/30 selection:text-orange-200">

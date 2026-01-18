@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { LayoutTemplate, RiskZone, Room } from '@/types';
 
 interface FireParticle {
@@ -62,8 +62,13 @@ export default function FireSpreadOverlay({
   const particlesRef = useRef<FireParticle[]>([]);
   const frontierRef = useRef<{ x: number; y: number }[]>([origin]);
   const animationFrameRef = useRef<number | undefined>(undefined);
-  const lastTimeRef = useRef<number>(Date.now());
+  const lastTimeRef = useRef<number>(0);
   const rngRef = useRef<SeededRandom>(new SeededRandom(params.seed || 42));
+
+  // Initialize lastTimeRef in useEffect to avoid calling Date.now() during render
+  useEffect(() => {
+    lastTimeRef.current = Date.now();
+  }, []);
 
   // Point-in-rectangle check
   const isInRoom = (x: number, y: number, room: Room): boolean => {
@@ -76,12 +81,12 @@ export default function FireSpreadOverlay({
   };
 
   // Check if point is in any room or hallway (valid spread area)
-  const isInValidArea = (x: number, y: number): boolean => {
+  const isInValidArea = useCallback((x: number, y: number): boolean => {
     return layout.rooms.some((room) => isInRoom(x, y, room));
-  };
+  }, [layout.rooms]);
 
   // Get spread probability based on location
-  const getSpreadProbability = (x: number, y: number): number => {
+  const getSpreadProbability = useCallback((x: number, y: number): number => {
     let prob = params.spreadProb;
 
     // Higher probability in hallways (corridors)
@@ -116,7 +121,7 @@ export default function FireSpreadOverlay({
     }
 
     return Math.min(prob, 1);
-  };
+  }, [layout.rooms, layout.exits, params.spreadProb, riskZones]);
 
   // Reset to initial state
   const reset = useCallback(() => {
@@ -291,7 +296,7 @@ export default function FireSpreadOverlay({
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [isRunning, speed, params, layout, riskZones]);
+  }, [isRunning, speed, params, layout, riskZones, getSpreadProbability, isInValidArea]);
 
   // Reset when origin changes
   useEffect(() => {
